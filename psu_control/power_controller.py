@@ -55,6 +55,7 @@ class PowerController:
 				self.max_voltage,
 				monitor_polling_time,
 				monitor_log_file,
+				verbose=verbose,
 			)
 		except Exception as e:
 			self.shutdown()
@@ -79,7 +80,7 @@ class PowerController:
 	def power_off(self):
 		return self.device.set_output_off()
 
-	def monitor(self):
+	def start_monitor(self):
 		if not self._monitor_running:
 			self._monitor_thread.start()
 

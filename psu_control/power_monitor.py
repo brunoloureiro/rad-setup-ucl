@@ -20,6 +20,7 @@ class PowerMonitor(threading.Thread):
 		max_voltage: float,
 		polling_time: float,
 		log_file: Optional[str],
+		verbose: bool = False,
 	):
 		threading.Thread.__init__(self)
 
@@ -31,12 +32,17 @@ class PowerMonitor(threading.Thread):
 
 		self.log_file = log_file
 		self._file_available = False
+		self.verbose = verbose
 
 		if log_file is not None:
 			try:
+				p = Path(log_file).parent
+				p.mkdir(exist_ok=True, parents=True)
 				f = open(log_file, 'a')
 				f.close()
 				self._file_available = True
+				if self.verbose:
+					self.logger.info(f"Successfully opened power measurement file {log_file}")
 			except FileNotFoundError as e:
 				self.logger.error(f"Error opening log file for power monitor: {e}")
 				self._file_available = False
@@ -47,14 +53,18 @@ class PowerMonitor(threading.Thread):
 	def run(self):
 		if self.log_file is not None and self._file_available:
 			try:
-				p = Path(self.log_file).parent
-				p.mkdir(exist_ok=True, parents=True)
+				if self.verbose:
+					self.logger.debug(f"Starting power monitor with logging enabled")
 				with open(self.log_file, 'a') as f:
+					if self.verbose:
+						self.logger.debug(f"Successfully opened measurement log file, starting thread")
 					self._run_monitor(f)
 			except FileNotFoundError as e:
 				self.logger.error(f"Error opening log file for power monitor: {e}")
 				raise e
 		else:
+			if self.verbose:
+				self.logger.debug(f"Starting power monitor without logging")
 			self._run_monitor(None)
 
 	def shutoff_device(self):
@@ -85,4 +95,7 @@ class PowerMonitor(threading.Thread):
 				s = f"[{now}] {stats}\n"
 				file.write(s)
 
-				time.sleep(self.polling_time)
+
+			if self.verbose:
+				self.logger.debug(f"Iteration done: {stats}")
+			time.sleep(self.polling_time)
