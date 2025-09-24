@@ -115,7 +115,7 @@ class PowerController:
 	):
 		self.device.set_remote(True)
 		self.logger.info(
-			f"Setting max values to {max_voltage}V and {max_voltage}A"
+			f"Setting max values to {max_voltage}V and {max_current}A"
 		)
 		self.device.set_OVP_threshold(max_voltage)
 		self.device.set_OCP_threshold(max_current)
