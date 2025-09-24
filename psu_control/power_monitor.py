@@ -22,7 +22,7 @@ class PowerMonitor(threading.Thread):
 		log_file: Optional[str],
 		verbose: bool = False,
 	):
-		threading.Thread.__init__(self)
+		threading.Thread.__init__(self, daemon=True)
 
 		self.logger = logger
 		self.device = device

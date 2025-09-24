@@ -82,6 +82,8 @@ class PowerController:
 
 	def start_monitor(self):
 		if not self._monitor_running:
+			if self.verbose:
+				self.logger.debug(f"Received signal to start the power monitor.")
 			self._monitor_thread.start()
 
 		self._monitor_running = True
