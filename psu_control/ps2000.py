@@ -45,14 +45,6 @@ class ps2000(object):
 	def close(self):
 		self.ser_dev.close()
 
-	def __enter__(self):
-		self.set_remote(True)
-		return self
-
-	def __exit__(self, type, value, traceback):
-		self.set_remote(False)
-		self.close()
-
 	# construct telegram
 	def _construct(self, type, node, obj, data):
 		telegram = bytearray()
