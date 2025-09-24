@@ -37,6 +37,7 @@ class ps2000(object):
 			port, timeout=0.06, baudrate=115200, parity=serial.PARITY_ODD)
 		self._transfer_lock = threading.Lock()
 		self.logger = logger
+		self.set_remote(True)
 		self.u_nom = self.get_nominal_voltage()
 		self.i_nom = self.get_nominal_current()
 
