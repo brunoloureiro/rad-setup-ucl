@@ -72,7 +72,7 @@ class PowerController:
 			)
 
 
-		if monitor_log_every is None:
+		if monitor_log_every is None or monitor_log_every == 0:
 			monitor_log_every = 1 / monitor_polling_time
 
 		monitor_log_every = int(monitor_log_every)
