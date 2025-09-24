@@ -35,10 +35,10 @@ class ps2000(object):
 		# set timeout to 0.06s to guarantee minimum interval time of 50ms
 		self.ser_dev = serial.Serial(
 			port, timeout=0.06, baudrate=115200, parity=serial.PARITY_ODD)
-		self.u_nom = self.get_nominal_voltage()
-		self.i_nom = self.get_nominal_current()
 		self._transfer_lock = threading.Lock()
 		self.logger = logger
+		self.u_nom = self.get_nominal_voltage()
+		self.i_nom = self.get_nominal_current()
 
 	# close the door behind you
 	def close(self):
