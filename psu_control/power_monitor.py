@@ -51,6 +51,7 @@ class PowerMonitor(threading.Thread):
 		self._stop_signal = threading.Event()
 
 	def stop(self):
+		self.logger.info(f"Power monitor received signal to stop.")
 		self._stop_signal.set()
 
 	def run(self):

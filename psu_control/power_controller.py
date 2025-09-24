@@ -13,23 +13,56 @@ class PowerController:
 		self,
 		logger,
 		update_initial_state: bool,
-		initial_state: bool = True,
-		initial_voltage: float = 12.0,
-		initial_current: float = 1.3,
 		max_voltage: float = 14.0,
 		max_current: float = 1.5,
 		monitor_polling_time: float = 20 * MS,
 		monitor_log_file = None,
 		*,
+		initial_state: bool = None,
+		initial_voltage: float = None,
+		initial_current: float = None,
 		device = None,
 		serial_port = '/dev/ttyACM0',
 		verbose: bool = False,
 	):
+		self.logger = logger
+		self.verbose = verbose
+
+		if update_initial_state:
+			if initial_state is None:
+				s = (
+					f"Power monitor is configured to update initial state, "
+					f"but did not receive value to power on/off"
+				)
+				self.logger.error(s)
+				raise ValueError(
+					s
+				)
+
+			if initial_voltage is None:
+				s = (
+					f"Power monitor is configured to update initial state, "
+					f"but did not receive value for voltage"
+				)
+				self.logger.error(s)
+				raise ValueError(
+					s
+				)
+
+			if initial_current is None:
+				s = (
+					f"Power monitor is configured to update initial state, "
+					f"but did not receive value for current"
+				)
+				self.logger.error(s)
+				raise ValueError(
+					s
+				)
+
 		# monitoring settings
 
 		self.max_voltage = max_voltage
 		self.max_current = max_current
-		self.logger = logger
 
 		if device is None:
 			device = ps2000(
@@ -38,14 +71,13 @@ class PowerController:
 			)
 
 		self.device = device
-		self.verbose = verbose
 		self._monitor_running = False
 		try:
 			self.init_device(
-				update_initial_state,
-				initial_state,
-				initial_current,
-				initial_voltage,
+				update_initial_state = update_initial_state,
+				initial_state = initial_state,
+				initial_voltage = initial_voltage,
+				initial_current = initial_current,
 			)
 
 			self._monitor_thread = PowerMonitor(
@@ -63,6 +95,7 @@ class PowerController:
 
 	def init_device(
 		self,
+		*,
 		update_initial_state: bool,
 		initial_state: bool,
 		initial_voltage: float,
@@ -80,9 +113,14 @@ class PowerController:
 			self.device.set_output_on(initial_state)
 
 	def power_on(self):
+		if self.verbose:
+			self.logger.debug(f"Power controller is turning PSU on.")
+
 		return self.device.set_output_on()
 
 	def power_off(self):
+		if self.verbose:
+			self.logger.debug(f"Power controller is turning PSU off.")
 		return self.device.set_output_off()
 
 	def start_monitor(self):
@@ -92,6 +130,10 @@ class PowerController:
 			self._monitor_thread.start()
 
 		self._monitor_running = True
+
+	def stop_monitor(self):
+		self.logger.info(f"Sending signal from power controller to stop monitor.")
+		self._monitor_thread.stop()
 
 	def shutdown(self, cause=None):
 		reason_str = f"Reason: {cause}" if cause is not None else ""
