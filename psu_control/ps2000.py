@@ -245,7 +245,7 @@ class ps2000(object):
 		return self.u_nom * v / 25600
 
 	def set_OVP_threshold(self, u):
-		return self._set_integer(38, u)
+		return self._set_integer(38, u) # is this really not supposed to have the u_nom?
 
 	# object 39
 	def get_OCP_threshold(self):

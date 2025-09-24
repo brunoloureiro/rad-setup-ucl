@@ -85,6 +85,8 @@ class PowerController:
 				initial_state = initial_state,
 				initial_voltage = initial_voltage,
 				initial_current = initial_current,
+				max_voltage = max_voltage,
+				max_current = max_current,
 			)
 
 			self._monitor_thread = PowerMonitor(
@@ -108,8 +110,15 @@ class PowerController:
 		initial_state: bool,
 		initial_voltage: float,
 		initial_current: float,
+		max_voltage: float,
+		max_current: float,
 	):
 		self.device.set_remote(True)
+		self.logger.info(
+			f"Setting max values to {max_voltage}V and {max_voltage}A"
+		)
+		self.device.set_OVP_threshold(max_voltage)
+		self.device.set_OCP_threshold(max_current)
 		curr_state = self.device.get_output_on()
 		if update_initial_state and (curr_state != initial_state):
 			self.logger.info(
