@@ -89,5 +89,8 @@ class PowerController:
 		self._monitor_running = True
 
 	def shutdown(self):
+		self.logger.info(f"Shutting down the controller!")
 		self.device.set_remote(False)
+		self.logger.info(f"Disabled remote control for the power supply")
 		self.device.close()
+		self.logger.info(f"Controller closed the connection to the device. Exiting.")

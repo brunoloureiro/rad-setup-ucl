@@ -43,6 +43,7 @@ class ps2000(object):
 
 	# close the door behind you
 	def close(self):
+		self.logger.info(f"Closing serial connection")
 		self.ser_dev.close()
 
 	# construct telegram
@@ -119,7 +120,7 @@ class ps2000(object):
 			for b in telegram:
 				debug_str += f'{b:02x} '
 
-			self.logger.debug(f"Sent: {debug_str}")
+			self.logger.debug(f"Sending: {debug_str}")
 
 
 		if self.verbose:
