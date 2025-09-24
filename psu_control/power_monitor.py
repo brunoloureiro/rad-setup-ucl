@@ -19,6 +19,7 @@ class PowerMonitor(threading.Thread):
 		max_current: float,
 		max_voltage: float,
 		polling_time: float,
+		log_every: int,
 		log_file: Optional[str],
 		verbose: bool = False,
 	):
@@ -29,6 +30,7 @@ class PowerMonitor(threading.Thread):
 		self.max_current = max_current
 		self.max_voltage = max_voltage
 		self.polling_time = polling_time
+		self.log_every = log_every if log_every is not None else 1
 
 		self.log_file = log_file
 		self._file_available = False
@@ -78,6 +80,7 @@ class PowerMonitor(threading.Thread):
 		self.device.set_output_off()
 
 	def _run_monitor(self, file=None):
+		iter = 0
 		while not self._stop_signal.is_set():
 			stats: PowerStats = self.device.get_current_stats()
 
@@ -97,9 +100,11 @@ class PowerMonitor(threading.Thread):
 
 			now = datetime.datetime.now()
 
-			if file is not None:
+			if file is not None and (iter % self.log_every == 0):
 				s = f"[{now}] {stats}\n"
 				file.write(s)
+
+			iter += 1
 
 			if self.verbose:
 				self.logger.debug(f"Iteration done: {stats}")
