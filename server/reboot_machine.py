@@ -97,14 +97,19 @@ def psu_switch(power_controller: PowerController, status: str, switch_port: int,
     :return: ErrorCodes enum
     """
     if status == __ON:
-        power_controller.power_on()
+        res = power_controller.power_on()
 
     elif status == __OFF:
-        power_controller.power_off()
+        res = power_controller.power_off()
     else:
         raise ValueError(
             f"Invalid command for PSU switch: {status}"
         )
+
+    if res is True:
+        return ErrorCodes.SUCCESS
+    else:
+        return ErrorCodes.GENERAL_ERROR
 
 
 
