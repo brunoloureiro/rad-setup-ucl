@@ -37,8 +37,8 @@ class ps2000(object):
 			port, timeout=0.06, baudrate=115200, parity=serial.PARITY_ODD)
 		self.u_nom = self.get_nominal_voltage()
 		self.i_nom = self.get_nominal_current()
+		self._transfer_lock = threading.Lock()
 		self.logger = logger
-		self._lock = threading.Lock()
 
 	# close the door behind you
 	def close(self):
@@ -128,7 +128,7 @@ class ps2000(object):
 
 			self.logger.debug(debug_str)
 
-		with self._lock:
+		with self._transfer_lock:
 			# send telegram
 			self.ser_dev.write(telegram)
 
