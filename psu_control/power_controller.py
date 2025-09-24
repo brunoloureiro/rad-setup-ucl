@@ -58,7 +58,8 @@ class PowerController:
 				verbose=verbose,
 			)
 		except Exception as e:
-			self.shutdown()
+			self.shutdown(cause=e)
+			raise e
 
 	def init_device(
 		self,
@@ -88,8 +89,9 @@ class PowerController:
 
 		self._monitor_running = True
 
-	def shutdown(self):
-		self.logger.info(f"Shutting down the controller!")
+	def shutdown(self, cause=None):
+		reason_str = f"Reason: {cause}" if cause is not None else ""
+		self.logger.info(f"Shutting down the controller!{reason_str}")
 		self.device.set_remote(False)
 		self.logger.info(f"Disabled remote control for the power supply")
 		self.device.close()
