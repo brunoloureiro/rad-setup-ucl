@@ -119,21 +119,32 @@ class ps2000(object):
 			for b in telegram:
 				debug_str += f'{b:02x} '
 
-			self.logger.debug(debug_str)
+			self.logger.debug(f"Sent: {debug_str}")
 
+
+		if self.verbose:
+			self.logger.debug(f"Acquiring lock for transfer of type {type}")
 		with self._transfer_lock:
+			if self.verbose:
+				self.logger.debug(f"Lock acquired for transfer of type {type}")
 			# send telegram
 			self.ser_dev.write(telegram)
 
+			if self.verbose:
+				self.logger.debug(f"Telegram sent for transfer of type {type}")
+
 			# receive response (always ask for more than the longest answer)
 			ans = self.ser_dev.read(100)
+
+			if self.verbose:
+				self.logger.debug(f"Answer received for transfer of type {type}")
 
 			if self.verbose:
 				debug_str: str = '* telegram: '
 				for b in ans:
 					debug_str += f'{b:02x} '
 
-				self.logger.debug(debug_str)
+				self.logger.debug(f"Received: {debug_str}")
 
 			# if the answer is too short, the checksum may be missing
 			if len(ans) < 5:
@@ -147,6 +158,8 @@ class ps2000(object):
 			self._check_checksum(ans)
 			self._check_error(ans)
 
+		if self.verbose:
+			self.logger.debug(f"Releasing lock after transfer of type {type}")
 		return ans
 
 	# get a binary object

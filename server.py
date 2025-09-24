@@ -151,14 +151,14 @@ def main():
             initial_current = 1.3,
             max_voltage = 14.0,
             max_current = 1.5,
-            monitor_polling_time = 20 * (1/1000),
+            monitor_polling_time = 100 * (1/1000),
             verbose=True,
             monitor_log_file='/home/carol/repos/rad-setup-ucl/measurements.log',
         )
         logger.debug(f"Started power controller successfully")
         logger.debug(f"Starting power monitor thread")
-        power_controller.monitor()
-        logger.debug(f"Starting power monitor thread successfully")
+        power_controller.start_monitor()
+        logger.debug(f"Started power monitor thread successfully")
         # Start the server threads
         for m in server_parameters["machines"]:
             if m['enabled']:
