@@ -71,6 +71,10 @@ class PowerController:
 		self.device.set_remote(True)
 		curr_state = self.device.get_output_on()
 		if update_initial_state and (curr_state != initial_state):
+			self.logger.info(
+				f"Initializing the device with {initial_voltage}V and {initial_current}A, "
+				f"then turning it {'on' if initial_state else 'off'}"
+			)
 			self.device.set_voltage(initial_voltage)
 			self.device.set_current(initial_current)
 			self.device.set_output_on(initial_state)
