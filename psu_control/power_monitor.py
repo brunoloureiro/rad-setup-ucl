@@ -6,7 +6,7 @@ import threading
 import datetime
 import time
 
-from power_stats import (
+from .power_stats import (
 	PowerStats,
 )
 
