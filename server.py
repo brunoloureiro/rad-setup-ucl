@@ -176,7 +176,8 @@ def main():
         # Unknown exit
         sys.exit(-1)
     finally:
-        power_controller.shutdown()
+        if power_controller is not None:
+            power_controller.shutdown()
 
     print(f"Done. Exiting.")
 
