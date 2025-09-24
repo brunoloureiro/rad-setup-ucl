@@ -16,7 +16,7 @@ class PowerController:
 		max_voltage: float = 14.0,
 		max_current: float = 1.5,
 		monitor_polling_time: float = 20 * MS,
-		monitor_polling_every: int = None,
+		monitor_log_every: int = None,
 		monitor_log_file = None,
 		*,
 		initial_state: bool = None,
@@ -72,8 +72,10 @@ class PowerController:
 			)
 
 
-		if monitor_polling_every is None:
-			monitor_polling_every = 1 / monitor_polling_time
+		if monitor_log_every is None:
+			monitor_log_every = 1 / monitor_polling_time
+
+		monitor_log_every = int(monitor_log_every)
 
 		self.device = device
 		self._monitor_running = False
@@ -91,7 +93,7 @@ class PowerController:
 				self.max_current,
 				self.max_voltage,
 				monitor_polling_time,
-				monitor_polling_every,
+				monitor_log_every,
 				monitor_log_file,
 				verbose=verbose,
 			)
