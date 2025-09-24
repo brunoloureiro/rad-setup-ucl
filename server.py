@@ -34,6 +34,7 @@ def __end_daemon_machines():
     """ General end for all machines """
     logger = logging.getLogger(name=PARENT_LOGGER_NAME)
     if PWR_CTRL is not None:
+        PWR_CTRL.stop_monitor()
         PWR_CTRL.shutdown()
     logger.info("Stopping all threads")
     for machine in MACHINE_LIST:
