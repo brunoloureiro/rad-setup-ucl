@@ -39,6 +39,7 @@ class PowerController:
 
 		self.device = device
 		self.verbose = verbose
+		self._monitor_running = False
 		try:
 			self.init_device(
 				update_initial_state,
@@ -55,8 +56,6 @@ class PowerController:
 				monitor_polling_time,
 				monitor_log_file,
 			)
-
-			self._monitor_running = False
 		except Exception as e:
 			self.shutdown()
 

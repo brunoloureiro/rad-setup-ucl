@@ -5,6 +5,7 @@ from typing import (
 import threading
 import datetime
 import time
+from pathlib import Path
 
 from .power_stats import (
 	PowerStats,
@@ -46,6 +47,8 @@ class PowerMonitor(threading.Thread):
 	def run(self):
 		if self.log_file is not None and self._file_available:
 			try:
+				p = Path(self.log_file).parent
+				p.mkdir(exist_ok=True, parents=True)
 				with open(self.log_file, 'a') as f:
 					self._run_monitor(f)
 			except FileNotFoundError as e:
