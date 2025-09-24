@@ -146,14 +146,14 @@ def main():
         power_controller = PowerController(
             logger=logger,
             update_initial_state = True,
-            initial_state = True,
+            initial_state = False,
             initial_voltage = 12.0,
             initial_current = 1.3,
             max_voltage = 14.0,
             max_current = 1.5,
             monitor_polling_time = 100 * (1/1000),
             verbose=True,
-            monitor_log_file='/home/carol/repos/rad-setup-ucl/measurements.log',
+            monitor_log_file='/home/carol/radiation-setup/measurements.log',
         )
         logger.debug(f"Started power controller successfully")
         logger.debug(f"Starting power monitor thread")
@@ -175,9 +175,6 @@ def main():
             power_controller.shutdown()
         # Unknown exit
         sys.exit(-1)
-    finally:
-        if power_controller is not None:
-            power_controller.shutdown()
 
     print(f"Done. Exiting.")
 
