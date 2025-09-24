@@ -25,7 +25,7 @@ PARENT_LOGGER_NAME: str = os.path.basename(str(__file__).lower().replace(".py", 
 # Machine List
 MACHINE_LIST: list = list()
 CONSOLE_CURSES_MANAGER: typing.Optional[ConsoleCursesManager] = None
-
+PWR_CTRL: PowerController = None
 THREAD_JOIN_TIMEOUT: float = 1.0
 
 
@@ -33,6 +33,8 @@ def __end_daemon_machines():
     # FIXME: This does not work when the end is before the threads are not started yet
     """ General end for all machines """
     logger = logging.getLogger(name=PARENT_LOGGER_NAME)
+    if PWR_CTRL is not None:
+        PWR_CTRL.shutdown()
     logger.info("Stopping all threads")
     for machine in MACHINE_LIST:
         machine.stop()
@@ -156,6 +158,8 @@ def main():
             monitor_log_file='/home/carol/radiation-setup/measurements.log',
         )
         logger.debug(f"Started power controller successfully")
+        global PWR_CTRL
+        PWR_CTRL = power_controller
         logger.debug(f"Starting power monitor thread")
         power_controller.start_monitor()
         logger.debug(f"Started power monitor thread successfully")
