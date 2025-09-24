@@ -14,6 +14,7 @@ import time
 from .power_stats import (
 	PowerStats,
 )
+import threading
 
 
 class ps2000(object):
@@ -37,6 +38,7 @@ class ps2000(object):
 		self.u_nom = self.get_nominal_voltage()
 		self.i_nom = self.get_nominal_current()
 		self.logger = logger
+		self._lock = threading.Lock()
 
 	# close the door behind you
 	def close(self):
@@ -126,30 +128,31 @@ class ps2000(object):
 
 			self.logger.debug(debug_str)
 
-		# send telegram
-		self.ser_dev.write(telegram)
+		with self._lock:
+			# send telegram
+			self.ser_dev.write(telegram)
 
-		# receive response (always ask for more than the longest answer)
-		ans = self.ser_dev.read(100)
+			# receive response (always ask for more than the longest answer)
+			ans = self.ser_dev.read(100)
 
-		if self.verbose:
-			debug_str: str = '* telegram: '
-			for b in ans:
-				debug_str += f'{b:02x} '
+			if self.verbose:
+				debug_str: str = '* telegram: '
+				for b in ans:
+					debug_str += f'{b:02x} '
 
-			self.logger.debug(debug_str)
+				self.logger.debug(debug_str)
 
-		# if the answer is too short, the checksum may be missing
-		if len(ans) < 5:
-			err_msg: str = f"ERROR: short answer ({len(ans)} bytes received)"
-			self.logger.error(err_msg)
-			raise ValueError(
-				err_msg
-			)
+			# if the answer is too short, the checksum may be missing
+			if len(ans) < 5:
+				err_msg: str = f"ERROR: short answer ({len(ans)} bytes received)"
+				self.logger.error(err_msg)
+				raise ValueError(
+					err_msg
+				)
 
-		# check answer
-		self._check_checksum(ans)
-		self._check_error(ans)
+			# check answer
+			self._check_checksum(ans)
+			self._check_error(ans)
 
 		return ans
 
