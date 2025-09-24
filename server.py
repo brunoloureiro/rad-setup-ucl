@@ -147,6 +147,7 @@ def main():
         transfer_monitor.start()
         logger.debug(f"Starting power controller")
         monitor_polling_ms = 5
+        monitor_logging_frequency_seconds = 3
         power_controller = PowerController(
             logger=logger,
             update_initial_state = True,
@@ -156,7 +157,7 @@ def main():
             max_voltage = 14.0,
             max_current = 1.5,
             monitor_polling_time = monitor_polling_ms * (1/1000),
-            monitor_log_every = int(1000 / monitor_polling_ms),
+            monitor_log_every = int(monitor_logging_frequency_seconds / monitor_polling_ms),
             verbose=True,
             monitor_log_file='/home/carol/radiation-setup/measurements.log',
         )
