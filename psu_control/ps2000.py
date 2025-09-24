@@ -20,7 +20,7 @@ import threading
 class ps2000(object):
 
 	# set verbose to True to see all bytes
-	verbose = False
+	verbose = True
 
 	# defines
 	PS_QUERY = 0x40

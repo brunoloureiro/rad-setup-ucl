@@ -50,6 +50,9 @@ class PowerMonitor(threading.Thread):
 
 		self._stop_signal = threading.Event()
 
+	def stop(self):
+		self._stop_signal.set()
+
 	def run(self):
 		if self.log_file is not None and self._file_available:
 			try:
@@ -66,6 +69,8 @@ class PowerMonitor(threading.Thread):
 			if self.verbose:
 				self.logger.debug(f"Starting power monitor without logging")
 			self._run_monitor(None)
+
+		self.logger.info(f"Stopping power monitor")
 
 	def shutoff_device(self):
 		self.device.set_remote(True)
@@ -94,7 +99,6 @@ class PowerMonitor(threading.Thread):
 			if file is not None:
 				s = f"[{now}] {stats}\n"
 				file.write(s)
-
 
 			if self.verbose:
 				self.logger.debug(f"Iteration done: {stats}")
