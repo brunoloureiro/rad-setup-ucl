@@ -245,15 +245,15 @@ class ps2000(object):
 		return self.u_nom * v / 25600
 
 	def set_OVP_threshold(self, u):
-		return self._set_integer(38, u) # is this really not supposed to have the u_nom?
+		return self._set_integer(38, int(round((u * 25600.0) / self.u_nom))) # is this really not supposed to have the u_nom?
 
 	# object 39
 	def get_OCP_threshold(self):
 		i = self._get_integer(39)
 		return self.i_nom * i / 25600
 
-	def set_OCP_threshold(self, i):
-		return self._set_integer(39, i)
+	def set_OCP_threshold(self, u):
+		return self._set_integer(39, int(round((u * 25600.0) / self.u_nom)))
 
 	# object 50
 	def get_voltage_setpoint(self):
