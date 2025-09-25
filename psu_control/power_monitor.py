@@ -106,6 +106,7 @@ class PowerMonitor(threading.Thread):
 
 			iter += 1
 
-			if self.verbose:
-				self.logger.debug(f"Iteration done: {stats}")
+			if self.verbose and (iter % self.log_every == 0):
+				#self.logger.debug(f"Iteration done: {stats}")
+				pass
 			time.sleep(self.polling_time)

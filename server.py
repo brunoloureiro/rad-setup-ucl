@@ -150,7 +150,7 @@ def main():
         monitor_logging_frequency_seconds = 3
         power_controller = PowerController(
             logger=logger,
-            update_initial_state = True,
+            update_initial_state = False,
             initial_state = False,
             initial_voltage = 12.0,
             initial_current = 1.3,
