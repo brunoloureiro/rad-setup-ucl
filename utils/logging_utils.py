@@ -1,7 +1,7 @@
 import time
 
 def log_debug_and_print(message, logger, verbose):
-	if logger is not None:
+	if logger is not None and verbose:
 		logger.debug(message)
 	if verbose:
 		print(f"[DEBUG] [{time.ctime()} - {time.time()}]: " + message)
