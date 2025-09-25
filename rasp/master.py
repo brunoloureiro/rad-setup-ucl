@@ -45,7 +45,7 @@ class Master():
 		command_verbose=None,
 		transfer_verbose=None,
 		log_heartbeat_every=10,
-		corrupted_output_save_path='/home/unitn/experiment_data/corrupted_output/',
+		corrupted_output_save_path='/home/carol/experiment_data/corrupted_output/',
 		file_transfer_max_connections=5,
 		switch_model='default',
 		switch_ip='192.168.1.100',

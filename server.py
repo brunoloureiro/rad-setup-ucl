@@ -9,7 +9,10 @@ import threading
 import traceback
 import typing
 from pathlib import Path
-from rasp import FileReceiver
+from rasp import (
+    FileReceiver,
+    Master,
+)
 from psu_control import PowerController
 
 import yaml
@@ -136,15 +139,23 @@ def main():
     power_controller: PowerController = None
 
     try:
-        transfer_monitor = FileReceiver(
-            transfer_ip,
-            transfer_port,
-            transfer_timeout,
-            logger,
-            download_path=corrupted_output_save_path,
-            max_connections=file_transfer_max_connections,
+        master = Master(
+            heartbeat_ip=transfer_ip,
+            heartbeat_port=1234,
+            heartbeat_timeout=2,
+            command_ip=transfer_ip,
+            command_port=1236,
+            command_timeout=2,
+            transfer_ip=transfer_ip,
+            transfer_port=transfer_port,
+            transfer_timeout=transfer_timeout,
+            logger=logger,
+            verbose=False,
+            log_heartbeat_every=10,
+            corrupted_output_save_path=corrupted_output_save_path,
+            file_transfer_max_connections=file_transfer_max_connections,
         )
-        transfer_monitor.start()
+        #transfer_monitor.start()
         logger.debug(f"Starting power controller")
         monitor_polling_ms = 5
         monitor_logging_frequency_seconds = 3
